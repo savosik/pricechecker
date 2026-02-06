@@ -1,0 +1,126 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mp_parse2_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - mp_parse2_network
+    depends_on:
+      - mysql
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mp_parse2_worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: /usr/bin/supervisord -c /etc/supervisor/conf.d/laravel-worker.conf
+    environment:
+      LOG_CHANNEL: stderr
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - mp_parse2_network
+    depends_on:
+      - app
+      - mysql
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    container_name: mp_parse2_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - mp_parse2_network
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: mp_parse2_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - mp_parse2_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: mp_parse2_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mp_parse2_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: mp_parse2_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USERNAME:-laravel}
+      PMA_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "8081:80"
+    networks:
+      - mp_parse2_network
+    depends_on:
+      - mysql
+
+  browser:
+    image: accetto/ubuntu-vnc-xfce-g3
+    container_name: mp_parse2_browser
+    restart: unless-stopped
+    shm_size: '2gb'
+    environment:
+      - VNC_PW=secret
+      - VNC_RESOLUTION=1920x1080
+    ports:
+      - "5901:5901"   # VNC
+      - "6901:6901"   # noVNC web interface
+    volumes:
+      - ./chrome_extension:/headless/extension:ro
+      - ./docker/browser:/headless/scripts
+    user: "0:0"  # Run as root to simplify installs
+
+    networks:
+      - mp_parse2_network
+    depends_on:
+      - nginx
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  mp_parse2_network:
+    driver: bridge

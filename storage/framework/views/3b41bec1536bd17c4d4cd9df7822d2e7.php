@@ -1,0 +1,2 @@
+<div <?php echo e($attributes->class(['my-4'])); ?>></div>
+<?php /**PATH /var/www/html/vendor/moonshine/moonshine/src/Laravel/src/Providers/../../../UI/resources/views/components/layout/line-break.blade.php ENDPATH**/ ?>

@@ -102,6 +102,9 @@ services:
     environment:
       - VNC_PW=secret
       - VNC_RESOLUTION=1920x1080
+      - PARSER_API_URL=http://nginx
+      - PARSER_API_TOKEN=${DOM_PARSER_API_TOKEN:-}
+      - PARSER_AUTO_START=false
     ports:
       - "5901:5901"   # VNC
       - "6901:6901"   # noVNC web interface
@@ -109,7 +112,7 @@ services:
       - ./chrome_extension:/headless/extension:ro
       - ./docker/browser:/headless/scripts
     user: "0:0"  # Run as root to simplify installs
-
+    entrypoint: ["/bin/bash", "/headless/scripts/entrypoint.sh"]
     networks:
       - mp_parse2_network
     depends_on:

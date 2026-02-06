@@ -1,0 +1,5 @@
+{
+    "apiUrl": "${PARSER_API_URL}",
+    "apiToken": "${PARSER_API_TOKEN}",
+    "autoStart": "${PARSER_AUTO_START}"
+}

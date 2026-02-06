@@ -353,10 +353,49 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
 });
 
+// Load config from config.json if exists
+async function loadConfigFromFile() {
+    try {
+        const configUrl = chrome.runtime.getURL('config.json');
+        const response = await fetch(configUrl);
+
+        if (response.ok) {
+            const config = await response.json();
+            console.log('Loading config from file:', config);
+
+            // Apply settings
+            const updates = {};
+            if (config.apiUrl) {
+                updates.apiUrl = config.apiUrl;
+            }
+            if (config.apiToken) {
+                updates.apiToken = config.apiToken;
+            }
+
+            if (Object.keys(updates).length > 0) {
+                await chrome.storage.local.set(updates);
+                console.log('Config applied from file');
+            }
+
+            // Auto-start if configured
+            if (config.autoStart === true || config.autoStart === 'true') {
+                console.log('Auto-starting worker...');
+                await chrome.storage.local.set({ isRunning: true });
+                pollLoop();
+            }
+
+            return true;
+        }
+    } catch (error) {
+        console.log('No config.json found or error loading:', error.message);
+    }
+    return false;
+}
+
 // Initialize on install
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
     console.log('MP Parser Worker installed');
-    chrome.storage.local.set({
+    await chrome.storage.local.set({
         isRunning: false,
         stats: {
             tasksCompleted: 0,
@@ -364,4 +403,19 @@ chrome.runtime.onInstalled.addListener(() => {
             lastActivity: null,
         },
     });
+
+    // Try to load config from file
+    await loadConfigFromFile();
+});
+
+// Also try to load config on startup (for updates)
+chrome.runtime.onStartup.addListener(async () => {
+    console.log('MP Parser Worker starting...');
+    const settings = await getSettings();
+
+    // If already configured, check for auto-start
+    if (settings.isRunning) {
+        console.log('Resuming worker...');
+        pollLoop();
+    }
 });

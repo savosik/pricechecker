@@ -163,7 +163,22 @@ git pull origin main
 
 ---
 
-## 📋 Контакты
+## � SSH ключ для новых серверов
+
+При создании новой Linux машины добавьте этот публичный ключ в `~/.ssh/authorized_keys` для получения SSH доступа:
+
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyibhfRFXDz88YULg5BqrjrKT473cYBfY4g+89W3dlz savosik@github
+```
+
+Или используйте команду при настройке сервера:
+```bash
+mkdir -p ~/.ssh && echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyibhfRFXDz88YULg5BqrjrKT473cYBfY4g+89W3dlz savosik@github' >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
+```
+
+---
+
+## �📋 Контакты
 
 **Передал:** savosik  
 **Дата:** 2026-02-06

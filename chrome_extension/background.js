@@ -353,15 +353,50 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
 });
 
+// Load configuration from config.json if available
+async function loadConfigFromFile() {
+    try {
+        const configUrl = chrome.runtime.getURL('config.json');
+        const response = await fetch(configUrl);
+        if (!response.ok) {
+            console.log('No config.json found or not readable');
+            return;
+        }
+        const config = await response.json();
+        console.log('Config.json loaded:', { apiUrl: config.apiUrl, autoStart: config.autoStart });
+
+        const updates = {};
+        if (config.apiUrl) updates.apiUrl = config.apiUrl;
+        if (config.apiToken) updates.apiToken = config.apiToken;
+
+        if (Object.keys(updates).length > 0) {
+            await chrome.storage.local.set(updates);
+            console.log('Config applied from config.json');
+        }
+
+        // Auto-start if configured
+        if (config.autoStart === true || config.autoStart === 'true') {
+            console.log('Auto-starting worker from config.json');
+            await startWorker();
+        }
+    } catch (error) {
+        console.log('Could not load config.json:', error.message);
+    }
+}
+
 // Initialize on install
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
     console.log('MP Parser Worker installed');
-    chrome.storage.local.set({
-        isRunning: false,
+    await chrome.storage.local.set({
         stats: {
             tasksCompleted: 0,
             tasksFailed: 0,
             lastActivity: null,
         },
     });
+    // Load config on install
+    await loadConfigFromFile();
 });
+
+// Also load config on service worker startup (covers restarts)
+loadConfigFromFile();

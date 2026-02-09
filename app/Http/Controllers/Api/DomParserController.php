@@ -45,10 +45,19 @@ class DomParserController extends Controller
         }
 
         // Find and claim a pending task atomically
-        $task = DomTask::where('status', 'pending')
-            ->orderBy('created_at', 'asc')
-            ->lockForUpdate()
-            ->first();
+        $task = \DB::transaction(function () use ($workerId) {
+            $task = DomTask::where('status', 'pending')
+                ->orderBy('created_at', 'asc')
+                ->lockForUpdate()
+                ->first();
+
+            if (!$task) {
+                return null;
+            }
+
+            $task->markAsProcessing($workerId);
+            return $task;
+        });
 
         if (!$task) {
             return response()->json([
@@ -56,8 +65,6 @@ class DomParserController extends Controller
                 'message' => 'No pending tasks',
             ]);
         }
-
-        $task->markAsProcessing($workerId);
 
         Log::info('DomParser: Task assigned', [
             'task_id' => $task->id,

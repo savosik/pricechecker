@@ -13,7 +13,10 @@
         "*://*.ozon.ru/*",
         "*://*.ozon.by/*",
         "*://*.wildberries.ru/*",
-        "*://*.wildberries.by/*"
+        "*://*.wildberries.by/*",
+        "*://*.pecado.ru/*",
+        "http://localhost/*",
+        "http://127.0.0.1/*"
     ],
     "background": {
         "service_worker": "background.js"
@@ -44,5 +47,15 @@
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",
         "128": "icons/icon128.png"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "config.json"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
 }

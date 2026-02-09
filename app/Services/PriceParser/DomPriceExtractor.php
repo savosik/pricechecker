@@ -138,12 +138,12 @@ class DomPriceExtractor
     /**
      * Parse price string to float
      * Handles both comma and dot as decimal separator
-     * Removes spaces used as thousand separators
+     * Removes spaces used as thousand separators (including non-breaking spaces)
      */
     private function parsePrice(string $priceStr): float
     {
-        // Remove spaces
-        $cleaned = preg_replace('/\s/', '', $priceStr);
+        // Remove all whitespace including non-breaking spaces (U+00A0, used by Ozon as thousand separator)
+        $cleaned = preg_replace('/[\s\x{00A0}]+/u', '', $priceStr);
         // Replace comma with dot for decimal
         $cleaned = str_replace(',', '.', $cleaned);
         // Handle cases like "1.234.56" -> "1234.56"

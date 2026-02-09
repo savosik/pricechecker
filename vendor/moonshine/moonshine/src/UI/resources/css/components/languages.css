@@ -1,0 +1,21 @@
+/* Languages switcher */
+
+.languages-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-languages-btn-gap, --spacing(1));
+
+  .languages-btn-icon {
+    --ms-icon-size: var(--ms-languages-btn-icon-size, --spacing(4.5));
+  }
+
+  .languages-btn-arrow {
+    --ms-icon-size: var(--ms-languages-arrow-icon-size, --spacing(3));
+  }
+
+  &._is-opened {
+    .languages-btn-arrow {
+      transform: scaleY(-1);
+    }
+  }
+}

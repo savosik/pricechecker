@@ -1,0 +1,58 @@
+/* Social */
+
+/* Social divider */
+
+.social-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--ms-social-divider-margin, --spacing(4));
+  gap: var(--ms-social-divider-gap, --spacing(2));
+
+  &::before,
+  &::after {
+    content: '';
+    flex-grow: 1;
+    min-width: 6px;
+    height: 1px;
+    background-color: var(--ms-social-divider-line-color, var(--color-base-stroke));
+  }
+}
+
+/* Social list */
+
+.social-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ms-social-list-gap, --spacing(2));
+}
+
+/* Social item */
+
+.social-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ms-social-item-size, --spacing(8));
+  height: var(--ms-social-item-size, --spacing(8));
+  border-radius: var(--ms-social-item-radius, 50%);
+  background-color: var(--ms-social-item-bg-color, var(--color-base));
+  color: var(--ms-social-item-color, var(--color-base-text));
+  transition-property: color, background-color;
+  transition-duration: var(--default-transition-duration);
+  transition-timing-function: var(--default-transition-timing-function);
+
+  @variant hover {
+    background-color: var(--ms-social-item-bg-color-hover, var(--color-primary));
+    color: var(--ms-social-item-color-hover, var(--color-primary-text));
+  }
+}
+
+.social-item > svg {
+  width: var(--ms-social-item-icon-size, --spacing(4));
+  height: var(--ms-social-item-icon-size, --spacing(4));
+  fill: currentColor;
+  stroke: currentColor;
+}

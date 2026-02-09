@@ -1,0 +1,22 @@
+import tippy from 'tippy.js'
+
+export default () => ({
+  tooltipInstance: null,
+
+  init() {
+    this.tooltipInstance = tippy(this.$el, {
+      placement: 'auto',
+      offset: [0, 10],
+      trigger: 'mouseenter',
+      content: () => this.$el.querySelector('.menu-text').textContent,
+    })
+  },
+
+  toggleTooltip() {
+    const lgMediaQuery = window.matchMedia('(min-width: 1024px) and (max-width: 1279.98px)')
+
+    if (this.tooltipInstance && !this.$data.minimizedMenu && !lgMediaQuery.matches) {
+      this.tooltipInstance.hide()
+    }
+  },
+})

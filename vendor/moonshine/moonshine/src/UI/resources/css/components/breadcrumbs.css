@@ -1,0 +1,30 @@
+.breadcrumbs {
+  flex-grow: 1;
+  overflow-x: auto;
+}
+
+.breadcrumbs-list {
+  display: flex;
+  gap: var(--ms-breadcrumbs-gap, --spacing(2));
+}
+
+.breadcrumbs-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-breadcrumbs-gap, --spacing(2));
+  font-size: var(--ms-breadcrumbs-font-size, var(--text-xs));
+  white-space: nowrap;
+
+  &:not(:last-child) {
+    &::after {
+      content: '/';
+      opacity: var(--ms-breadcrumbs-opacity, 0.5);
+    }
+  }
+
+  a {
+    @variant not-hover {
+      opacity: var(--ms-breadcrumbs-opacity, 0.5);
+    }
+  }
+}

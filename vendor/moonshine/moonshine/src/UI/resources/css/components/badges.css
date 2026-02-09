@@ -1,0 +1,161 @@
+/* Badge basic */
+
+.badge,
+a.badge {
+  display: inline-block;
+  padding-block: var(--ms-badge-padding-y, --spacing(0.5));
+  padding-inline: var(--ms-badge-padding-x, --spacing(2.5));
+  border-radius: var(--ms-badge-radius, --spacing(1.5));
+  background-color: var(--ms-badge-bg-color, var(--color-base-300));
+  color: var(--ms-badge-color, var(--color-base-text));
+  font-size: var(--ms-badge-font-size, var(--text-xs));
+  transition-property: background-color, color;
+  transition-duration: var(--default-transition-duration);
+  transition-timing-function: var(--default-transition-timing-function);
+
+  a {
+    color: inherit;
+
+    @variant hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Badge themes */
+
+.badge-primary {
+  --ms-badge-bg-color: --alpha(var(--color-primary) / 0.3);
+  --ms-badge-color: var(--color-base-text);
+
+  @variant dark {
+    --ms-badge-bg-color: --alpha(var(--color-primary) / 0.5);
+  }
+}
+
+.badge-secondary {
+  --ms-badge-bg-color: --alpha(var(--color-secondary) / 0.3);
+  --ms-badge-color: var(--color-base-text);
+
+  @variant dark {
+    --ms-badge-bg-color: --alpha(var(--color-secondary) / 0.5);
+  }
+}
+
+.badge-success {
+  --ms-badge-bg-color: --alpha(var(--color-success) / 0.3);
+  --ms-badge-color: var(--color-success-text);
+
+  @variant dark {
+    --ms-badge-bg-color: --alpha(var(--color-success) / 0.5);
+  }
+}
+
+.badge-warning {
+  --ms-badge-bg-color: --alpha(var(--color-warning) / 0.3);
+  --ms-badge-color: var(--color-warning-text);
+
+  @variant dark {
+    --ms-badge-bg-color: --alpha(var(--color-warning) / 0.5);
+  }
+}
+
+.badge-error {
+  --ms-badge-bg-color: --alpha(var(--color-error) / 0.3);
+  --ms-badge-color: var(--color-error-text);
+
+  @variant dark {
+    --ms-badge-bg-color: --alpha(var(--color-error) / 0.5);
+  }
+}
+
+.badge-info {
+  --ms-badge-bg-color: --alpha(var(--color-info) / 0.3);
+  --ms-badge-color: var(--color-info-text);
+
+  @variant dark {
+    --ms-badge-bg-color: --alpha(var(--color-info) / 0.5);
+  }
+}
+
+.badge-purple {
+  --ms-badge-bg-color: var(--color-purple-100);
+  --ms-badge-color: var(--color-purple-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-purple-900);
+    --ms-badge-color: var(--color-purple-300);
+  }
+}
+
+.badge-pink {
+  --ms-badge-bg-color: var(--color-pink-100);
+  --ms-badge-color: var(--color-pink-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-pink-900);
+    --ms-badge-color: var(--color-pink-300);
+  }
+}
+
+.badge-blue {
+  --ms-badge-bg-color: var(--color-blue-100);
+  --ms-badge-color: var(--color-blue-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-blue-900);
+    --ms-badge-color: var(--color-blue-300);
+  }
+}
+
+.badge-green {
+  --ms-badge-bg-color: var(--color-green-100);
+  --ms-badge-color: var(--color-green-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-green-900);
+    --ms-badge-color: var(--color-green-300);
+  }
+}
+
+.badge-yellow {
+  --ms-badge-bg-color: var(--color-yellow-100);
+  --ms-badge-color: var(--color-yellow-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-yellow-900);
+    --ms-badge-color: var(--color-yellow-300);
+  }
+}
+
+.badge-red {
+  --ms-badge-bg-color: var(--color-red-100);
+  --ms-badge-color: var(--color-red-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-red-900);
+    --ms-badge-color: var(--color-red-300);
+  }
+}
+
+.badge-gray {
+  --ms-badge-bg-color: var(--color-gray-100);
+  --ms-badge-color: var(--color-gray-800);
+
+  @variant dark {
+    --ms-badge-bg-color: var(--color-gray-700);
+    --ms-badge-color: var(--color-gray-300);
+  }
+}
+
+/* Interactive badges (buttons/links) */
+
+button.badge,
+a.badge {
+  cursor: pointer;
+
+  @variant hover {
+    color: var(--ms-badge-color);
+    text-decoration: underline;
+  }
+}

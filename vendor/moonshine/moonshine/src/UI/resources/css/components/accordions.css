@@ -1,0 +1,72 @@
+/* Accordion basic */
+.accordion + .accordion {
+  margin-top: var(--ms-accordion-space-y, --spacing(2));
+}
+
+.accordion-item {
+  overflow: hidden;
+  border-radius: var(--ms-accordion-item-radius, var(--radius-lg));
+  border: var(--ms-accordion-item-border-width, 1px) solid
+    var(--ms-accordion-item-border-color, var(--color-base-stroke));
+  background-color: var(--ms-accordion-item-bg-color, var(--color-base));
+  color: var(--ms-accordion-item-color, var(--color-base-text));
+
+  &._is-opened {
+    background-color: var(--ms-accordion-item-opened-bg-color, var(--color-base));
+    color: var(--ms-accordion-item-opened-color, var(--color-base-text));
+  }
+}
+
+/* Accordion button */
+
+.accordion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-accordion-btn-gap, --spacing(3));
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  padding-block: var(
+    --ms-accordion-btn-padding-y,
+    var(--ms-accordion-item-padding-y, --spacing(3))
+  );
+  padding-inline: var(
+    --ms-accordion-btn-padding-x,
+    var(--ms-accordion-item-padding-x, --spacing(3))
+  );
+  border: 0;
+  background-color: transparent;
+  color: var(--ms-accordion-btn-color, var(--color-base-text));
+  font-size: var(--ms-accordion-btn-font-size, var(--text-base));
+  font-weight: var(--ms-accordion-btn-font-weight, var(--font-weight-semibold));
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+
+  & > svg {
+    flex-shrink: 0;
+    height: var(--ms-accordion-btn-arrow-size, --spacing(3));
+    width: var(--ms-accordion-btn-arrow-size, --spacing(3));
+  }
+
+  @variant is_active {
+    color: var(--ms-accordion-btn-active-color, var(--color-base-text));
+
+    & > svg {
+      transform: scaleY(-1);
+    }
+  }
+}
+
+/* Accordion content */
+
+.accordion-content {
+  padding-block-end: var(
+    --ms-accordion-content-padding-y,
+    var(--ms-accordion-item-padding-y, --spacing(3))
+  );
+  padding-inline: var(
+    --ms-accordion-content-padding-x,
+    var(--ms-accordion-item-padding-x, --spacing(3))
+  );
+}

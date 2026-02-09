@@ -1,0 +1,303 @@
+@layer base {
+  /* Custom Scrollbar */
+  :root {
+    --ms-scrollbar-color: var(--color-base-800);
+    --ms-scrollbar-hover-color: var(--color-base-700);
+
+    @variant dark {
+      --ms-scrollbar-color: var(--color-base-300);
+      --ms-scrollbar-hover-color: var(--color-base-400);
+    }
+  }
+
+  * {
+    @-moz-document url-prefix() {
+      scrollbar-width: thin;
+      scrollbar-color: var(--ms-scrollbar-color) transparent;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    background-color: var(--ms-scrollbar-color);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ms-scrollbar-hover-color);
+  }
+
+  /* General CSS */
+  *:focus-visible {
+    outline: 2px dashed var(--color-primary);
+    outline-offset: --spacing(0.875);
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text, var(--color-white));
+  }
+
+  html {
+    font-size: var(--ms-html-font-size, var(--text-base, 16px));
+
+    @variant motion-safe {
+      scroll-behavior: smooth;
+    }
+
+    @variant max-sm {
+      font-size: var(--ms-html-mobile-font-size, 14px);
+    }
+  }
+
+  body {
+    overflow-x: hidden;
+    position: relative;
+    min-width: 320px;
+    background-color: var(--ms-layout-body-bg-color, var(--color-body));
+    font-size: var(--text-base);
+    color: var(--ms-layout-body-color, var(--color-base-text));
+  }
+
+  h1,
+  .h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.3;
+  }
+
+  h2,
+  .h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.3;
+  }
+
+  h3,
+  .h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.4;
+  }
+
+  h4,
+  .h4 {
+    font-size: var(--text-md);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h5,
+  h6,
+  .h5,
+  .h6 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    a {
+      color: inherit;
+    }
+  }
+
+  .heading {
+    margin-bottom: --spacing(4);
+  }
+
+  a {
+    --ms-link-color: var(--ms-defaults-link-color, var(--color-base-text));
+    --ms-link-hover-color: var(--ms-defaults-link-hover-color, var(--color-primary));
+
+    color: var(--ms-link-color);
+    transition-property:
+      background-color, border-color, color, text-decoration-color, box-shadow, opacity, fill,
+      stroke;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+
+    @variant hover {
+      color: var(--ms-link-hover-color);
+    }
+  }
+
+  .link {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+  }
+
+  button {
+    cursor: pointer;
+    transition-property:
+      background-color, border-color, color, text-decoration-color, box-shadow, opacity, fill,
+      stroke;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+
+    @variant disabled {
+      cursor: default;
+    }
+  }
+
+  p + p {
+    margin-top: var(--ms-defaults-paragraph-space-y, --spacing(2));
+  }
+
+  b,
+  strong {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  svg {
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  pre {
+    overflow: auto;
+    max-width: 100%;
+  }
+
+  .chart {
+    width: 100%;
+
+    > * {
+      margin-inline: auto;
+    }
+  }
+
+  ul {
+    /* List marker */
+
+    &.list-marker {
+      @apply list-[square] space-y-2 pl-6 marker:text-primary;
+    }
+
+    /* Checkboxes tree */
+
+    &.tree-list {
+      @apply -m-1 space-y-1.5 overflow-x-auto p-1;
+
+      li {
+        @apply space-y-1.5;
+
+        ul {
+          @apply ml-6 space-y-1.5;
+        }
+      }
+    }
+
+    /* Checkboxes horizontal */
+
+    &.horizontal-list {
+      display: grid;
+      align-items: center;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+      li {
+        padding-right: --spacing(2);
+        padding-bottom: --spacing(2);
+
+        .form-group {
+          flex-wrap: nowrap;
+        }
+      }
+    }
+  }
+
+  /* Images in a row */
+  .images-row {
+    --_images-size: var(--ms-images-row-size, --spacing(10));
+
+    display: flex;
+
+    & > * {
+      overflow: hidden;
+      width: var(--_images-size);
+      height: var(--_images-size);
+      border-radius: var(--ms-images-row-radius, 50%);
+      border-width: var(--ms-images-row-border-width, --spacing(0.5));
+      border-style: solid;
+      border-color: var(--ms-images-row-border-color, var(--color-base-stroke));
+
+      &:not(:first-child) {
+        margin-left: calc(var(--_images-size) * -0.5);
+      }
+    }
+  }
+
+  /* Divider */
+  hr,
+  hr.divider {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin-block: var(--ms-hr-divider-spacing-y, --spacing(4));
+    border: none;
+    border-top: 1px solid var(--ms-hr-divider-border-color, var(--color-base-stroke));
+    background: none;
+  }
+
+  div.divider {
+    --_divider-color: var(--ms-divider-color, var(--color-base-text));
+    --_divider-line-bg-color: var(--ms-divider-line-bg-color, var(--color-base-stroke));
+    --_divider-line-min-width: var(--ms-divider-line-min-width, --spacing(4));
+    --_divider-line-height: var(--ms-divider-line-height, 1px);
+
+    display: flex;
+    align-items: center;
+    gap: var(--ms-divider-gap, --spacing(2.5));
+    margin-block: var(--ms-divider-space-y, --spacing(4));
+    color: var(--_divider-color);
+
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      min-width: var(--_divider-line-min-width);
+      height: var(--_divider-line-height);
+      background-color: var(--_divider-line-bg-color);
+    }
+
+    &.divider-centered {
+      justify-content: center;
+      text-align: center;
+
+      &::before,
+      &::after {
+        flex-grow: 1;
+      }
+
+      &::after {
+        content: '';
+        flex-shrink: 0;
+        min-width: var(--_divider-line-min-width);
+        height: var(--_divider-line-height);
+        background-color: var(--_divider-line-bg-color);
+      }
+    }
+  }
+
+  .space-elements > :not([hidden], [type='hidden']) ~ :not([hidden], [type='hidden']) {
+    --tw-space-y-reverse: 0;
+    --tw-value: 1.25rem;
+
+    @apply mt-[calc(var(--tw-value)*(1-var(--tw-space-y-reverse)))]
+    mb-[calc(var(--tw-value)*var(--tw-space-y-reverse))];
+  }
+}

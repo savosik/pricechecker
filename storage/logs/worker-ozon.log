@@ -1,0 +1,5 @@
+  2026-02-06 13:06:12 App\Jobs\ProcessDomJob ......................... RUNNING
+[2026-02-06 13:06:12] local.INFO: ProcessDomJob: Starting for task 1  
+[2026-02-06 13:06:12] local.WARNING: DomPriceExtractor: Could not find Ozon price in DOM  
+[2026-02-06 13:06:12] local.WARNING: ProcessDomJob: Could not extract price from DOM {"task_id":1,"marketplace":"ozon"} 
+  2026-02-06 13:06:12 App\Jobs\ProcessDomJob ................... 219.37ms DONE

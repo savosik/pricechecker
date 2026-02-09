@@ -1,0 +1,223 @@
+/* Progress bars */
+
+.progress {
+  display: flex;
+  height: var(--ms-progress-height, --spacing(4));
+  border-radius: var(--ms-progress-radius, --spacing(4));
+  background-color: var(--ms-progress-bg-color, var(--color-base-100));
+}
+
+/* Progress bar */
+
+.progress-bar {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ms-progress-bar-radius, inherit);
+  background-color: var(--ms-progress-bar-bg-color, var(--color-base-300));
+  color: var(--ms-progress-bar-color, var(--color-base-text));
+  font-size: var(--ms-progress-bar-font-size, var(--text-xs));
+  font-weight: var(--ms-progress-bar-font-weight, var(--font-weight-medium));
+  line-height: 1;
+}
+
+/* Progress bar color variants */
+
+.progress-bar--primary {
+  --ms-progress-bar-bg-color: var(--color-primary);
+  --ms-progress-bar-color: var(--color-primary-text);
+}
+
+.progress-bar--secondary {
+  --ms-progress-bar-bg-color: var(--color-secondary);
+  --ms-progress-bar-color: var(--color-secondary-text);
+}
+
+.progress-bar--success {
+  --ms-progress-bar-bg-color: --alpha(var(--color-success) / 0.4);
+  --ms-progress-bar-color: var(--color-success-text);
+}
+
+.progress-bar--warning {
+  --ms-progress-bar-bg-color: --alpha(var(--color-warning) / 0.4);
+  --ms-progress-bar-color: var(--color-warning-text);
+}
+
+.progress-bar--error {
+  --ms-progress-bar-bg-color: --alpha(var(--color-error) / 0.4);
+  --ms-progress-bar-color: var(--color-error-text);
+}
+
+.progress-bar--info {
+  --ms-progress-bar-bg-color: --alpha(var(--color-info) / 0.4);
+  --ms-progress-bar-color: var(--color-info-text);
+}
+
+.progress-bar--purple {
+  --ms-progress-bar-bg-color: var(--color-purple-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+.progress-bar--pink {
+  --ms-progress-bar-bg-color: var(--color-pink-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+.progress-bar--blue {
+  --ms-progress-bar-bg-color: var(--color-blue-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+.progress-bar--green {
+  --ms-progress-bar-bg-color: var(--color-green-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+.progress-bar--yellow {
+  --ms-progress-bar-bg-color: var(--color-yellow-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+.progress-bar--red {
+  --ms-progress-bar-bg-color: var(--color-red-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+.progress-bar--gray {
+  --ms-progress-bar-bg-color: var(--color-gray-500);
+  --ms-progress-bar-color: var(--color-white);
+}
+
+/* Radial Progress bars */
+
+.radial-progress {
+  --value: 0;
+  --size: var(--ms-radial-progress-size, --spacing(12));
+  --thickness: var(--ms-radial-progress-thickness, --spacing(1));
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 var(--thickness)
+    var(--ms-radial-progress-track-color, var(--color-base-100));
+  color: var(--ms-radial-progress-color, var(--color-base-700));
+  text-align: center;
+}
+
+/* Progress circle */
+
+.radial-progress::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(farthest-side, currentColor 98%, rgba(0, 0, 0, 0)) top/var(--thickness)
+      var(--thickness) no-repeat,
+    conic-gradient(currentColor calc(var(--value) * 1%), rgba(0, 0, 0, 0) 0);
+  mask: radial-gradient(
+    farthest-side,
+    rgba(0, 0, 0, 0) calc(99% - var(--thickness)),
+    #000 calc(100% - var(--thickness))
+  );
+}
+
+.radial-progress::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: calc(50% - var(--thickness) / 2);
+  border-radius: 50%;
+  background-color: currentColor;
+  transform: rotate(calc(var(--value) * 3.6deg - 90deg)) translate(calc(var(--size) / 2 - 50%));
+}
+
+/* Progress circle label */
+
+.radial-progress-label {
+  font-size: clamp(--spacing(4), calc(var(--size) / 4), calc(var(--size) / 2));
+  font-weight: var(--ms-radial-progress-label-weight, var(--font-weight-bold));
+}
+
+/* Progress circle sizes */
+
+.radial-progress-sm {
+  --ms-radial-progress-size: --spacing(12);
+  --ms-radial-progress-thickness: --spacing(1);
+}
+
+.radial-progress-md {
+  --ms-radial-progress-size: --spacing(20);
+  --ms-radial-progress-thickness: --spacing(1.25);
+}
+
+.radial-progress-lg {
+  --ms-radial-progress-size: --spacing(28);
+  --ms-radial-progress-thickness: --spacing(1.5);
+}
+
+.radial-progress-xl {
+  --ms-radial-progress-size: --spacing(36);
+  --ms-radial-progress-thickness: --spacing(2);
+}
+
+/* Progress circle themes */
+
+.radial-progress--primary {
+  --ms-radial-progress-color: var(--color-primary);
+}
+
+.radial-progress--secondary {
+  --ms-radial-progress-color: var(--color-secondary);
+}
+
+.radial-progress--success {
+  --ms-radial-progress-color: var(--color-success-text);
+}
+
+.radial-progress--warning {
+  --ms-radial-progress-color: var(--color-warning-text);
+}
+
+.radial-progress--error {
+  --ms-radial-progress-color: var(--color-error-text);
+}
+
+.radial-progress--info {
+  --ms-radial-progress-color: var(--color-info-text);
+}
+
+.radial-progress--purple {
+  --ms-radial-progress-color: var(--color-purple-500);
+}
+
+.radial-progress--pink {
+  --ms-radial-progress-color: var(--color-pink-500);
+}
+
+.radial-progress--blue {
+  --ms-radial-progress-color: var(--color-blue-500);
+}
+
+.radial-progress--green {
+  --ms-radial-progress-color: var(--color-green-500);
+}
+
+.radial-progress--yellow {
+  --ms-radial-progress-color: var(--color-yellow-500);
+}
+
+.radial-progress--red {
+  --ms-radial-progress-color: var(--color-red-500);
+}
+
+.radial-progress--gray {
+  --ms-radial-progress-color: var(--color-gray-500);
+}

@@ -1,0 +1,47 @@
+/* Skeleton basic */
+
+.skeleton {
+  display: block;
+  height: var(--ms-skeleton-default-height, --spacing(3));
+  border-radius: var(--ms-skeleton-default-radius, var(--radius-2xl));
+  background: linear-gradient(
+    90deg,
+    var(--ms-skeleton-default-color, --alpha(var(--color-base-text) / 0.025)) 0%,
+    var(--ms-skeleton-default-blink-color, --alpha(var(--color-base-text) / 0.15)) 20%,
+    var(--ms-skeleton-default-color, --alpha(var(--color-base-text) / 0.025)) 40%,
+    var(--ms-skeleton-default-color, --alpha(var(--color-base-text) / 0.025)) 100%
+  );
+  background-size: 200% 100%;
+  animation-name: ms-skeleton-loading;
+  animation-duration: var(--ms-skeleton-default-duration, 1500ms);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+
+  & + .skeleton {
+    margin-top: var(--ms-skeleton-default-spacing, --spacing(2));
+  }
+}
+
+/* Skeleton custom sizes */
+
+.skeleton-circle {
+  width: var(--ms-skeleton-circle-width, --spacing(5));
+  height: var(--ms-skeleton-circle-height, --spacing(5));
+  border-radius: 9999px;
+}
+
+.skeleton-title {
+  width: var(--ms-skeleton-title-width, 75%);
+  height: var(--ms-skeleton-title-height, --spacing(4));
+}
+
+/* Skeleton animation */
+
+@keyframes ms-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

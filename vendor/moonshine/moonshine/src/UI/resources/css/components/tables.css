@@ -1,0 +1,268 @@
+/* Table basic */
+
+@theme {
+  --ms-table-border-color: var(--color-base-stroke);
+  --ms-table-bg-color: var(--color-base);
+  --ms-table-radius: var(--radius-lg);
+  --ms-table-thead-bg-color: var(--color-base-100);
+}
+
+table {
+  text-indent: 0;
+  width: 100%;
+  border-color: inherit;
+  border-collapse: collapse;
+  text-align: left;
+
+  .dropzone-items {
+    overflow-y: auto;
+    max-width: var(--container-xs);
+    max-height: 8rem;
+    gap: --spacing(1.5);
+  }
+
+  .dropzone-item-file {
+    gap: --spacing(1);
+    padding: --spacing(1);
+    border: 0;
+  }
+
+  .dropzone-file-icon > svg {
+    @apply size-5;
+  }
+}
+
+.table-container {
+  overflow: hidden;
+  border-radius: var(--ms-table-radius);
+  border: var(--ms-table-border-width, 1px) solid
+    var(--ms-table-border-color, var(--ms-table-border-color));
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  width: 100%;
+  border-radius: var(--ms-table-radius);
+}
+
+.table {
+  background-color: var(--ms-table-bg-color);
+  font-size: var(--ms-table-font-size, var(--text-xs));
+
+  th,
+  td {
+    max-width: var(--ms-table-col-max-width, 64ch);
+  }
+
+  thead {
+    tr {
+      border-bottom: var(--ms-table-thead-border-width, 1px) solid
+        var(--ms-table-thead-border-color, var(--ms-table-border-color));
+    }
+    th {
+      white-space: nowrap;
+    }
+    th,
+    td {
+      padding-block: var(--ms-table-space-y, var(--ms-table-thead-space-y, --spacing(3)));
+      padding-inline: var(--ms-table-space-x, var(--ms-table-thead-space-x, --spacing(3)));
+      font-weight: var(--ms-table-thead-font-weight, var(--font-weight-semibold));
+    }
+  }
+
+  tbody {
+    tr {
+      &:not(:first-child) {
+        border-top: var(--ms-table-tbody-border-width, 1px) solid
+          var(--ms-table-tbody-border-color, var(--ms-table-border-color));
+      }
+    }
+
+    th,
+    td {
+      padding-block: var(--ms-table-space-y, var(--ms-table-tbody-space-y, --spacing(2)));
+      padding-inline: var(--ms-table-space-x, var(--ms-table-tbody-space-x, --spacing(3)));
+      overflow-wrap: break-word;
+    }
+  }
+
+  tfoot {
+    tr {
+      border-top: var(--ms-table-tfoot-border-width, 1px) solid
+        var(--ms-table-tfoot-border-color, var(--ms-table-border-color));
+    }
+
+    th,
+    td {
+      padding-block: var(--ms-table-space-y, var(--ms-table-tfoot-space-y, --spacing(3)));
+      padding-inline: var(--ms-table-space-x, var(--ms-table-tfoot-space-x, --spacing(3)));
+    }
+  }
+
+  &:not(.table-list) {
+    thead > tr:first-child {
+      th,
+      td {
+        &:first-child {
+          border-top-left-radius: var(--ms-table-thead-radius, var(--radius-lg));
+        }
+
+        &:last-child {
+          border-top-right-radius: var(--ms-table-thead-radius, var(--radius-lg));
+        }
+      }
+    }
+  }
+
+  .btn {
+    white-space: nowrap;
+  }
+}
+
+/* Table list */
+
+.table-list {
+  th,
+  td {
+    overflow: hidden;
+    position: relative;
+    max-width: var(--ms-table-list-col-max-width, 48ch);
+
+    &.fit-content {
+      min-width: fit-content;
+    }
+
+    &.min-content {
+      min-width: var(--ms-table-list-col-min-width, --spacing(80));
+      max-width: 100%;
+    }
+  }
+
+  thead {
+    background-color: var(--ms-table-thead-bg-color);
+  }
+
+  .text-ellipsis {
+    overflow: hidden;
+    max-width: 24ch;
+    white-space: nowrap;
+  }
+
+  .text-clamp {
+    @apply line-clamp-3 md:line-clamp-none;
+
+    min-width: 24ch;
+  }
+
+  &[data-click-action] {
+    tbody > tr {
+      td {
+        position: relative;
+      }
+
+      &:hover {
+        background-color: var(--ms-table-list-hover-bg-color, var(--color-base-100));
+        cursor: pointer;
+      }
+    }
+  }
+
+  td.table-grid {
+    overflow: auto;
+    min-width: var(--ms-table-list-table-grid-min-width, --spacing(54));
+  }
+}
+
+/* Sticky table & columns */
+
+.table-sticky {
+  @variant lg {
+    max-height: var(--ms-table-sticky-max-height, 70dvh);
+
+    & > table > thead {
+      position: sticky;
+      top: 0;
+      z-index: var(--ms-table-sticky-z-index, 1);
+    }
+  }
+}
+
+.table {
+  --ms-btn-square-size: var(--ms-table-btn-square-size, --spacing(8));
+
+  @variant md {
+    & > thead,
+    & > tbody {
+      tr[class*='bgc-'] {
+        th,
+        td {
+          &:not([class*='bgc-']) {
+            background-color: --alpha(var(--_bg-color, inherit) / 0.9);
+          }
+        }
+      }
+
+      th,
+      td {
+        &.sticky-col {
+          vertical-align: middle;
+          position: sticky;
+          right: 0;
+        }
+      }
+    }
+
+    & > thead {
+      th,
+      td {
+        &.sticky-col {
+          background-color: --alpha(
+            var(--ms-table-thead-bg-color, var(--ms-table-bg-color)) / 0.95
+          );
+        }
+      }
+    }
+
+    & > tbody {
+      th,
+      td {
+        &.sticky-col {
+          background-color: --alpha(
+            var(--_bg-color, var(--ms-table-bg-color, inherit)) / 0.95
+          ) !important;
+
+          &:has(.dropdown-body.visible) {
+            z-index: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Table helper classes */
+
+/* TODO: Remove dependency on this class used in detail record page
+ * This class is currently applied to tables on the record detail/preview page.
+ * Need to refactor the detail record page to work without table.
+ */
+.table-divider {
+  div.grid {
+    margin-block: 0 !important;
+    padding-block: --spacing(2);
+    border-bottom: 1px solid var(--ms-table-border-color);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+}
+
+.table-zoom-in {
+  tbody > tr {
+    @apply transition-all will-change-transform hover:scale-[1.015] hover:shadow-md hover:shadow-gray-200;
+  }
+}

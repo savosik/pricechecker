@@ -1,0 +1,9 @@
+.zoom-in {
+  transition-property: transform, translate, scale, rotate;
+  transition-timing-function: var(--default-transition-timing-function);
+  transition-duration: var(--default-transition-duration);
+
+  @variant hover {
+    scale: 1.05;
+  }
+}

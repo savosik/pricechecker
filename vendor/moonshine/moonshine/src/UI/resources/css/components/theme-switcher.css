@@ -1,0 +1,15 @@
+/* Theme switcher */
+
+.theme-switcher {
+  line-height: 0;
+}
+
+.theme-switcher-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-switcher-icon > svg:first-child {
+  position: absolute;
+}

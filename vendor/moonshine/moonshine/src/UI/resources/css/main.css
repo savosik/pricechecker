@@ -1,0 +1,98 @@
+/* Tailwind Base */
+@import 'tailwindcss';
+@import './base/fonts.css';
+@import './base/safelist.css';
+@import './base/breakpoints.css';
+@import './base/utilites.css';
+@import './base/colors.css';
+@import './base/common.css';
+@import './base/animation.css';
+
+/* Layouts */
+@import './layouts/basic.css';
+@import './layouts/layout-menu.css';
+@import './layouts/layout-menu-horizontal.css';
+@import './layouts/layout-menu-mobile.css';
+@import './layouts/layout-bottom-bar.css';
+
+/* Tailwind Components */
+@import './components/accordions.css' layer(components);
+@import './components/alerts.css' layer(components);
+@import './components/badges.css' layer(components);
+@import './components/box.css' layer(components);
+@import './components/breadcrumbs.css' layer(components);
+@import './components/buttons.css' layer(components);
+@import './components/cards.css' layer(components);
+@import './components/carousel.css' layer(components);
+@import './components/dropdowns.css' layer(components);
+@import './components/dropzone.css' layer(components);
+@import './components/forms.css' layer(components);
+@import './components/icon.css' layer(components);
+@import './components/languages.css' layer(components);
+@import './components/menu.css' layer(components);
+@import './components/modals.css' layer(components);
+@import './components/notifications.css' layer(components);
+@import './components/offcanvas.css' layer(components);
+@import './components/pagination.css' layer(components);
+@import './components/popovers.css' layer(components);
+@import './components/profile.css' layer(components);
+@import './components/progressbars.css' layer(components);
+@import './components/search.css' layer(components);
+@import './components/select.css' layer(components);
+@import './components/second-bar.css';
+@import './components/social.css' layer(components);
+@import './components/spinners.css' layer(components);
+@import './components/tables.css' layer(components);
+@import './components/tabs.css' layer(components);
+@import './components/theme-switcher.css' layer(components);
+@import './components/toasts.css' layer(components);
+@import './components/skeleton.css' layer(components);
+
+/* Pages */
+@import './pages/authentication.css';
+
+@source '@moonshine-resources/../../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '@moonshine-resources/**/*.{js,blade.php}';
+@source '@moonshine-resources/../**/*.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant is_active (&:where(&._is-active));
+@custom-variant hover {
+  &:hover {
+    @media (hover: hover) {
+      @slot;
+    }
+  }
+}
+
+@theme {
+  --radius: var(--radius-lg);
+
+  --font-sans: 'Gilroy', 'Roboto', sans-serif;
+  --default-font-size: 15px;
+  --default-line-height: 18px;
+
+  --text-2xs: 0.75rem;
+  --text-xs: 0.875rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+  --text-5xl: 3.75rem;
+  --text-6xl: 4.5rem;
+  --text-7xl: 6rem;
+  --text-8xl: 8rem;
+
+  --z-aside: 50;
+  --z-dropdown: 150;
+  --z-notifications: 300;
+  --z-overlay: 1000;
+  --z-offcanvas: 1050;
+  --z-modal: 1100;
+  --z-menu: 1200;
+  --z-toast: 1300;
+}

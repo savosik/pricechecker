@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {namespace};
+
+use {index-page-namespace};
+use {form-page-namespace};
+use {detail-page-namespace};
+
+use MoonShine\Crud\Resources\CrudResource;
+use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
+use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
+use Illuminate\Support\Collection;
+use MoonShine\Contracts\Core\PageContract;
+
+/**
+ * @extends CrudResource<array, {indexPage}, {formPage}, {detailPage}>
+ */
+class DummyClass extends CrudResource
+{
+    protected ?string $casterKeyName = 'id';
+
+    protected string $title = 'DummyTitle';
+    {properties}
+    /**
+     * @return list<class-string<PageContract>>
+     */
+    protected function pages(): array
+    {
+        return [
+            {indexPage}::class,
+            {formPage}::class,
+            {detailPage}::class,
+        ];
+    }
+
+    /**
+     * @return Collection<array-key, array>
+     */
+    public function getItems(): Collection
+    {
+        return new Collection([]);
+    }
+
+    public function findItem(bool $orFail = false): ?DataWrapperContract
+    {
+        return $this->getCaster()->cast([]);
+    }
+
+    public function save(DataWrapperContract $item, ?FieldsContract $fields = null): DataWrapperContract
+    {
+        $this->isRecentlyCreated = true;
+
+        return $item;
+    }
+
+    public function delete(DataWrapperContract $item, ?FieldsContract $fields = null): bool
+    {
+        return true;
+    }
+
+    public function massDelete(array $ids): void
+    {
+        //
+    }
+}

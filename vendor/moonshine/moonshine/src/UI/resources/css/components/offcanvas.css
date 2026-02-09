@@ -1,0 +1,74 @@
+/* Offcanvas */
+
+.offcanvas {
+  position: fixed;
+  inset-block: 0;
+  z-index: var(--z-offcanvas);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: min(100%, var(--ms-offcanvas-max-width, 400px));
+  background-color: var(--ms-offcanvas-bg-color, var(--color-base));
+  background-clip: padding-box;
+  color: var(--ms-offcanvas-color, var(--color-base-text));
+  outline: none;
+}
+
+/* Offcanvas positions */
+
+.offcanvas-left {
+  left: 0;
+  border-right: var(--ms-offcanvas-border-width, 1px) solid
+    var(--ms-offcanvas-border-color, var(--color-base-stroke));
+}
+
+.offcanvas-right {
+  right: 0;
+  border-left: var(--ms-offcanvas-border-width, 1px) solid
+    var(--ms-offcanvas-border-color, var(--color-base-stroke));
+}
+
+.offcanvas-template {
+  position: relative;
+  z-index: var(--z-offcanvas);
+}
+
+/* Offcanvas header */
+
+.offcanvas-header {
+  display: flex;
+  justify-content: space-between;
+  column-gap: var(--ms-offcanvas-header-gap, --spacing(4));
+  padding-block: var(--ms-offcanvas-header-padding-y, --spacing(4));
+  padding-inline: var(--ms-offcanvas-header-padding-x, --spacing(4));
+  border-bottom: var(--ms-offcanvas-header-border-width, 1px) solid
+    var(--ms-offcanvas-header-border-color, var(--color-base-stroke));
+}
+
+.offcanvas-title {
+  align-self: center;
+  font-size: var(--ms-offcanvas-title-font-size, var(--text-md));
+  font-weight: var(--ms-offcanvas-title-font-weight, var(--font-weight-semibold));
+  word-break: break-word;
+}
+
+/* Offcanvas body */
+
+.offcanvas-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-block: var(--ms-offcanvas-body-padding-y, --spacing(5));
+  padding-inline: var(--ms-offcanvas-body-padding-x, --spacing(4));
+}
+
+/* Offcanvas backdrop (overlay) */
+
+.offcanvas-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  background-color: --alpha(var(--ms-offcanvas-backdrop-bg-color, var(--color-black)) / 0.5);
+  backdrop-filter: blur(var(--ms-offcanvas-backdrop-blur, 4px));
+}

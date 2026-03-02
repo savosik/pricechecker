@@ -74,6 +74,12 @@ class ProcessDomJob implements ShouldQueue
                     ]
                 );
                 $sellerId = $seller->id;
+                
+                // Auto-assign seller to product link if not already set
+                if ($productLink->seller_id === null) {
+                    $productLink->update(['seller_id' => $sellerId]);
+                    Log::info("ProcessDomJob: Assigned seller '{$seller->name}' to ProductLink {$productLink->id}");
+                }
             }
             
             // Finding duplicate price

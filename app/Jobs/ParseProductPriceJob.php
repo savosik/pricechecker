@@ -69,6 +69,12 @@ class ParseProductPriceJob implements ShouldQueue
                 );
                 $sellerId = $seller->id;
                 Log::info("Found/Created Seller ID: {$sellerId} ({$seller->name})");
+                
+                // Auto-assign seller to product link if not already set
+                if ($this->productLink->seller_id === null) {
+                    $this->productLink->update(['seller_id' => $sellerId]);
+                    Log::info("Assigned seller '{$seller->name}' to ProductLink {$this->productLink->id}");
+                }
             }
 
             // Check for duplicate price

@@ -19,4 +19,9 @@ class Seller extends Model
     {
         return $this->hasMany(PriceHistory::class);
     }
+
+    public function productLinks(): HasMany
+    {
+        return $this->hasMany(ProductLink::class);
+    }
 }

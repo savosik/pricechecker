@@ -43,6 +43,7 @@ class ProductLinkResource extends ModelResource implements HasImportExportContra
             'product.name',
             'product.sku',
             'marketplace.name',
+            'seller.name',
             'product.brand.name',
             'product.categories.name',
         ];
@@ -59,8 +60,66 @@ class ProductLinkResource extends ModelResource implements HasImportExportContra
     protected function rules(mixed $item): array
     {
         return [
-            'marketplace_id' => 'required|exists:marketplaces,id',
-            'url' => 'required|url',
+            'marketplace_id' => 'nullable|exists:marketplaces,id',
+            'seller_id' => [
+                'nullable',
+                'exists:sellers,id',
+                function (string $attribute, mixed $value, \Closure $fail) use ($item) {
+                    if ($value === null) {
+                        return;
+                    }
+
+                    $productId = request()->input('product_id');
+                    $marketplaceId = request()->input('marketplace_id');
+
+                    // If marketplace not explicitly set, try to detect from URL
+                    if (!$marketplaceId) {
+                        $url = request()->input('url');
+                        if ($url) {
+                            $detected = \App\Models\ProductLink::detectMarketplaceFromUrl($url);
+                            $marketplaceId = $detected?->id;
+                        }
+                    }
+
+                    if (!$productId || !$marketplaceId) {
+                        return;
+                    }
+
+                    $query = \App\Models\ProductLink::where('product_id', $productId)
+                        ->where('marketplace_id', $marketplaceId)
+                        ->where('seller_id', $value);
+
+                    // Exclude current record when editing
+                    $itemId = $item->getKey() ?? null;
+                    if ($itemId) {
+                        $query->where('id', '!=', $itemId);
+                    }
+
+                    if ($query->exists()) {
+                        $seller = \App\Models\Seller::find($value);
+                        $marketplace = \App\Models\Marketplace::find($marketplaceId);
+                        $fail("Ссылка с продавцом \"{$seller->name}\" на маркетплейсе \"{$marketplace->name}\" уже существует для этого товара.");
+                    }
+                },
+            ],
+            'url' => [
+                'required',
+                'url',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    $marketplaceId = request()->input('marketplace_id');
+
+                    // If marketplace is explicitly selected, no need to auto-detect
+                    if ($marketplaceId) {
+                        return;
+                    }
+
+                    // Marketplace not selected — must be detectable from URL
+                    $detected = \App\Models\ProductLink::detectMarketplaceFromUrl($value);
+                    if (!$detected) {
+                        $fail('Не удалось определить маркетплейс по URL. Укажите маркетплейс вручную или используйте ссылку с ozon.ru / wildberries.ru.');
+                    }
+                },
+            ],
         ];
     }
 
@@ -81,6 +140,7 @@ class ProductLinkResource extends ModelResource implements HasImportExportContra
             \MoonShine\UI\Fields\ID::make(),
             \MoonShine\UI\Fields\Text::make('Товар', 'product.name'),
             \MoonShine\UI\Fields\Text::make('Маркетплейс', 'marketplace.name'),
+            \MoonShine\UI\Fields\Text::make('Продавец', 'seller.name'),
             \MoonShine\UI\Fields\Url::make('URL', 'url'),
         ];
     }

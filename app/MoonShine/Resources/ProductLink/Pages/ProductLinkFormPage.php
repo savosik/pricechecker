@@ -14,6 +14,7 @@ use MoonShine\UI\Fields\Url;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\Product\ProductResource;
 use App\MoonShine\Resources\Marketplace\MarketplaceResource;
+use App\MoonShine\Resources\Seller\SellerResource;
 
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use App\MoonShine\Resources\PriceHistory\PriceHistoryResource;
@@ -32,9 +33,11 @@ class ProductLinkFormPage extends FormPage
                     ->searchable()
                     ->asyncSearch()
                     ->required(),
-                BelongsTo::make('Маркетплейс', 'marketplace', resource: MarketplaceResource::class)
-                    ->required(),
-                Url::make('URL', 'url')->required(),
+                Url::make('URL', 'url')->required()
+                    ->hint('Маркетплейс определится автоматически по URL'),
+                BelongsTo::make('Продавец', 'seller', resource: SellerResource::class)
+                    ->nullable()
+                    ->searchable(),
             ]),
 
             HasMany::make('История цен', 'priceHistories', resource: PriceHistoryResource::class)

@@ -49,11 +49,22 @@ final class ProductIndexPage extends IndexPage
             BelongsToMany::make('Категории', 'categories', resource: CategoryResource::class)
                 ->inLine(separator: ' ', badge: true),
 
-            Preview::make('Ссылки', 'links_count', function (Product $product) {
-                $count = $product->links_count ?? 0;
-                return $count > 0 
-                    ? '<span class="badge badge-primary">' . $count . '</span>' 
-                    : '<span class="text-gray-400">0</span>';
+            Preview::make('Ссылки / Продавцы', 'links_count', function (Product $product) {
+                $links = $product->links()->with(['marketplace', 'seller'])->get();
+                if ($links->isEmpty()) {
+                    return '<span class="text-gray-400">нет ссылок</span>';
+                }
+                $items = [];
+                foreach ($links as $link) {
+                    $mp = $link->marketplace?->name ?? '?';
+                    $seller = $link->seller?->name;
+                    $label = $mp;
+                    if ($seller) {
+                        $label .= ' <span style="color:#6b7280">(' . htmlspecialchars($seller) . ')</span>';
+                    }
+                    $items[] = '<span class="badge badge-primary" style="margin:1px">' . $label . '</span>';
+                }
+                return implode(' ', $items);
             }),
             Preview::make('История', 'price_histories_count', function (Product $product) {
                 $count = $product->price_histories_count ?? 0;

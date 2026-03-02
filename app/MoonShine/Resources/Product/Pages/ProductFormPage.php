@@ -59,8 +59,14 @@ final class ProductFormPage extends FormPage
                         ->creatable()
                         ->fields([
                             ID::make(),
-                            BelongsTo::make('Маркетплейс', 'marketplace', resource: \App\MoonShine\Resources\Marketplace\MarketplaceResource::class),
-                            Url::make('URL'),
+                            Url::make('URL')
+                                ->hint('МП определится авто'),
+                            BelongsTo::make('Продавец', 'seller', resource: SellerResource::class)
+                                ->nullable()
+                                ->searchable(),
+                            BelongsTo::make('Маркетплейс', 'marketplace', resource: \App\MoonShine\Resources\Marketplace\MarketplaceResource::class)
+                                ->nullable()
+                                ->hideOnForm(),
                             Text::make('История', 'price_histories_count', fn($item) => $item->priceHistories()->count())->badge('purple'),
                             \MoonShine\UI\Fields\Preview::make('Действия')
                                 ->changeFill(fn($item) => \MoonShine\UI\Components\ActionButton::make('Парсить')

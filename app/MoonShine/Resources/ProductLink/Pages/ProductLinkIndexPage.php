@@ -13,6 +13,7 @@ use MoonShine\UI\Fields\Url;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\Product\ProductResource;
 use App\MoonShine\Resources\Marketplace\MarketplaceResource;
+use App\MoonShine\Resources\Seller\SellerResource;
 
 class ProductLinkIndexPage extends IndexPage
 {
@@ -26,8 +27,10 @@ class ProductLinkIndexPage extends IndexPage
             BelongsTo::make('Товар', 'product', resource: ProductResource::class)
                 ->searchable()
                 ->required(),
-            BelongsTo::make('Маркетплейс', 'marketplace', resource: MarketplaceResource::class)
-                ->required(),
+            BelongsTo::make('Маркетплейс', 'marketplace', resource: MarketplaceResource::class),
+            BelongsTo::make('Продавец', 'seller', resource: SellerResource::class)
+                ->nullable()
+                ->searchable(),
             Url::make('URL', 'url')->required(),
             Text::make('История', 'price_histories_count', fn($item) => $item->priceHistories()->count())
                 ->badge('purple'),

@@ -16,6 +16,7 @@ class ProductLink extends Model
     protected $fillable = [
         'product_id',
         'marketplace_id',
+        'seller_id',
         'url',
         'settings',
     ];
@@ -23,6 +24,51 @@ class ProductLink extends Model
     protected $casts = [
         'settings' => 'array',
     ];
+
+    /**
+     * URL domain patterns mapped to marketplace codes.
+     */
+    protected static array $marketplacePatterns = [
+        'ozon' => ['ozon.ru', 'ozon.com'],
+        'wildberries' => ['wildberries.ru', 'wb.ru'],
+    ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function (self $link) {
+            if (empty($link->marketplace_id) && !empty($link->url)) {
+                $detected = static::detectMarketplaceFromUrl($link->url);
+                if ($detected) {
+                    $link->marketplace_id = $detected->id;
+                }
+            }
+        });
+    }
+
+    /**
+     * Detect marketplace by URL domain.
+     */
+    public static function detectMarketplaceFromUrl(string $url): ?Marketplace
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            return null;
+        }
+
+        $host = strtolower($host);
+
+        foreach (static::$marketplacePatterns as $code => $domains) {
+            foreach ($domains as $domain) {
+                if (str_contains($host, $domain)) {
+                    return Marketplace::where('code', $code)->first();
+                }
+            }
+        }
+
+        return null;
+    }
 
     public function product(): BelongsTo
     {
@@ -32,6 +78,11 @@ class ProductLink extends Model
     public function marketplace(): BelongsTo
     {
         return $this->belongsTo(Marketplace::class);
+    }
+
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
     }
 
     public function priceHistories(): HasMany

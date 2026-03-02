@@ -57,7 +57,7 @@ class SellerResource extends ModelResource implements HasImportExportContract
 
     public function modifyQueryBuilder(\Illuminate\Contracts\Database\Eloquent\Builder $builder): \Illuminate\Contracts\Database\Eloquent\Builder
     {
-        return $builder->withCount(['priceHistories']);
+        return $builder->withCount(['priceHistories', 'productLinks']);
     }
 
     /**

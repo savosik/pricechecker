@@ -27,6 +27,9 @@ final class SellerIndexPage extends IndexPage
                 ->required(),
             Text::make('ИНН', 'inn'),
             Text::make('Внешний ID', 'external_id'),
+            \MoonShine\UI\Fields\Preview::make('Ссылки', 'product_links_count', fn($item) => $item->product_links_count)
+                ->badge('info')
+                ->sortable(),
             \MoonShine\UI\Fields\Preview::make('История', 'price_histories_count', fn($item) => $item->price_histories_count)
                 ->badge('purple')
                 ->sortable(),

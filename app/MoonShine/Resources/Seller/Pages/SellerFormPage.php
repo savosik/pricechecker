@@ -32,6 +32,15 @@ final class SellerFormPage extends FormPage
                 Text::make('Внешний ID', 'external_id'),
             ]),
 
+            \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ссылки маркетплейсов', 'productLinks', resource: \App\MoonShine\Resources\ProductLink\ProductLinkResource::class)
+                ->creatable(false)
+                ->fields([
+                    ID::make(),
+                    \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Товар', 'product', resource: \App\MoonShine\Resources\Product\ProductResource::class),
+                    \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Маркетплейс', 'marketplace', resource: \App\MoonShine\Resources\Marketplace\MarketplaceResource::class),
+                    \MoonShine\UI\Fields\Url::make('URL', 'url'),
+                ]),
+
             \MoonShine\Laravel\Fields\Relationships\HasMany::make('История цен', 'priceHistories', resource: \App\MoonShine\Resources\PriceHistory\PriceHistoryResource::class)
                 ->creatable(false)
                 ->fields([

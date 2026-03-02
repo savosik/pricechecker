@@ -44,6 +44,9 @@ class ProcessDomJob implements ShouldQueue
                 default => null,
             };
             
+            // Clear DOM content after extraction to save disk space
+            $this->domTask->update(['dom_content' => null]);
+            
             if ($priceData === null) {
                 Log::warning("ProcessDomJob: Could not extract price from DOM", [
                     'task_id' => $this->domTask->id,

@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('parse:prices')->twiceDaily(0, 12);
+Schedule::command('dom-tasks:clean --days=3')->dailyAt('03:00');

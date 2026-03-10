@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Marketplace extends Model
 {
@@ -11,4 +12,9 @@ class Marketplace extends Model
         'code',
         'color',
     ];
+
+    public function sellers(): HasMany
+    {
+        return $this->hasMany(Seller::class);
+    }
 }

@@ -6,11 +6,13 @@ namespace App\MoonShine\Resources\Seller\Pages;
 
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use App\MoonShine\Resources\Seller\SellerResource;
+use App\MoonShine\Resources\Marketplace\MarketplaceResource;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 
 /**
  * @extends FormPage<SellerResource>
@@ -30,6 +32,9 @@ final class SellerFormPage extends FormPage
                     ->required(),
                 Text::make('ИНН', 'inn'),
                 Text::make('Внешний ID', 'external_id'),
+                BelongsTo::make('Маркетплейс', 'marketplace', resource: MarketplaceResource::class)
+                    ->nullable()
+                    ->searchable(),
             ]),
 
             \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ссылки маркетплейсов', 'productLinks', resource: \App\MoonShine\Resources\ProductLink\ProductLinkResource::class)
@@ -61,6 +66,8 @@ final class SellerFormPage extends FormPage
             'name' => 'required|string|max:255',
             'inn' => 'nullable|string|max:255',
             'external_id' => 'nullable|string|max:255',
+            'marketplace_id' => 'nullable|exists:marketplaces,id',
         ];
     }
 }
+

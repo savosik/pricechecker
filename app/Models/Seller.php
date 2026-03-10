@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Seller extends Model
@@ -13,7 +14,13 @@ class Seller extends Model
         'name',
         'inn',
         'external_id',
+        'marketplace_id',
     ];
+
+    public function marketplace(): BelongsTo
+    {
+        return $this->belongsTo(Marketplace::class);
+    }
 
     public function priceHistories(): HasMany
     {

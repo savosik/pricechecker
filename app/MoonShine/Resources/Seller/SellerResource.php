@@ -57,7 +57,7 @@ class SellerResource extends ModelResource implements HasImportExportContract
 
     public function modifyQueryBuilder(\Illuminate\Contracts\Database\Eloquent\Builder $builder): \Illuminate\Contracts\Database\Eloquent\Builder
     {
-        return $builder->withCount(['priceHistories', 'productLinks']);
+        return $builder->withCount(['priceHistories', 'productLinks'])->with(['marketplace']);
     }
 
     /**
@@ -78,6 +78,7 @@ class SellerResource extends ModelResource implements HasImportExportContract
             \MoonShine\UI\Fields\Text::make('Название', 'name'),
             \MoonShine\UI\Fields\Text::make('ИНН', 'inn'),
             \MoonShine\UI\Fields\Text::make('Внешний ID', 'external_id'),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Маркетплейс', 'marketplace', resource: \App\MoonShine\Resources\Marketplace\MarketplaceResource::class),
         ];
     }
 }

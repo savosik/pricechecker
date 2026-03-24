@@ -13,9 +13,39 @@ class DomPriceExtractor
      * Ozon uses data-widget="webPrice" to contain price information
      * Prices can be in RUB (₽) or BYN format: "21,14 BYN" or "1 234 ₽"
      */
+    /**
+     * Minimum price threshold for Ozon (prices below this are likely bogus)
+     */
+    private const OZON_MIN_PRICE = 50;
+
+    /**
+     * Minimum ratio of user_price/base_price to consider valid.
+     * If user_price < 1% of base_price, it's likely a parsing artifact.
+     */
+    private const OZON_MIN_PRICE_RATIO = 0.01;
+
+    /**
+     * Patterns indicating the product is unavailable/delisted on Ozon
+     */
+    private const OZON_UNAVAILABLE_PATTERNS = [
+        'Этот товар закончился',
+        'Товар не найден',
+        'Нет в наличии',
+        'Товар снят с продажи',
+        'Данный товар не продаётся',
+        'К сожалению, искомая страница не найдена',
+        'Такой страницы не существует',
+    ];
+
     public function extractOzonPrice(string $dom): ?PriceData
     {
         try {
+            // Check if the page indicates the product is unavailable
+            if ($this->isOzonProductUnavailable($dom)) {
+                Log::info('DomPriceExtractor: Ozon product is unavailable/delisted, skipping');
+                return null;
+            }
+
             $sellerData = $this->extractOzonSeller($dom);
             
             // Method 1: Extract from webPrice widget (most reliable)
@@ -59,6 +89,15 @@ class DomPriceExtractor
                         'allPrices' => $prices,
                     ]);
                     
+                    // Validate price sanity
+                    if (!$this->isOzonPriceValid($userPrice, $basePrice)) {
+                        Log::warning('DomPriceExtractor: Ozon price failed validation', [
+                            'userPrice' => $userPrice,
+                            'basePrice' => $basePrice,
+                        ]);
+                        return null;
+                    }
+
                     return new PriceData(
                         userPrice: $userPrice,
                         basePrice: $basePrice,
@@ -108,14 +147,23 @@ class DomPriceExtractor
                 $prices = array_unique($prices);
                 sort($prices);
                 
-                // Filter out very small prices (likely ratings, counts, etc.)
-                $prices = array_filter($prices, fn($p) => $p > 10);
+                // Filter out very small prices (likely delivery cost, ratings, counts, etc.)
+                $prices = array_filter($prices, fn($p) => $p > self::OZON_MIN_PRICE);
                 $prices = array_values($prices);
                 
                 if (!empty($prices)) {
                     $userPrice = $prices[0]; // Smallest price (sale)
                     $basePrice = end($prices); // Largest price (original)
                     
+                    // Validate price sanity
+                    if (!$this->isOzonPriceValid($userPrice, $basePrice)) {
+                        Log::warning('DomPriceExtractor: Ozon fallback price failed validation', [
+                            'userPrice' => $userPrice,
+                            'basePrice' => $basePrice,
+                        ]);
+                        return null;
+                    }
+
                     return new PriceData(
                         userPrice: $userPrice,
                         basePrice: $basePrice,
@@ -133,6 +181,37 @@ class DomPriceExtractor
             ]);
             return null;
         }
+    }
+
+    /**
+     * Check if Ozon product page indicates the product is unavailable
+     */
+    private function isOzonProductUnavailable(string $dom): bool
+    {
+        foreach (self::OZON_UNAVAILABLE_PATTERNS as $pattern) {
+            if (mb_stripos($dom, $pattern) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Validate Ozon price against sanity checks
+     */
+    private function isOzonPriceValid(float $userPrice, float $basePrice): bool
+    {
+        // Reject prices below minimum threshold
+        if ($userPrice < self::OZON_MIN_PRICE) {
+            return false;
+        }
+
+        // Reject anomalous ratio (user_price < 1% of base_price)
+        if ($basePrice > 0 && ($userPrice / $basePrice) < self::OZON_MIN_PRICE_RATIO) {
+            return false;
+        }
+
+        return true;
     }
     
     /**

@@ -63,8 +63,9 @@ class ProcessDomJob implements ShouldQueue
             
             $product = $productLink->product;
             
-            // Find or create seller if present
-            $sellerId = null;
+            // Priority: seller from ProductLink -> seller from DOM -> null
+            $sellerId = $productLink->seller_id;
+
             if ($priceData->sellerData !== null) {
                 $seller = Seller::firstOrCreate(
                     ['external_id' => $priceData->sellerData->externalId],
@@ -73,10 +74,11 @@ class ProcessDomJob implements ShouldQueue
                         'inn' => $priceData->sellerData->inn,
                     ]
                 );
-                $sellerId = $seller->id;
+                Log::info("ProcessDomJob: Found/Created Seller ID: {$seller->id} ({$seller->name})");
                 
-                // Auto-assign seller to product link if not already set
-                if ($productLink->seller_id === null) {
+                // Use link seller if set, otherwise use DOM seller and assign to link
+                if ($sellerId === null) {
+                    $sellerId = $seller->id;
                     $productLink->update(['seller_id' => $sellerId]);
                     Log::info("ProcessDomJob: Assigned seller '{$seller->name}' to ProductLink {$productLink->id}");
                 }

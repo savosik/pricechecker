@@ -57,8 +57,9 @@ class ParseProductPriceJob implements ShouldQueue
                 return;
             }
 
-            // Find or create seller if seller data is present
-            $sellerId = null;
+            // Priority: seller from ProductLink -> seller from DOM -> null
+            $sellerId = $this->productLink->seller_id;
+
             if ($priceData->sellerData !== null) {
                 $seller = Seller::firstOrCreate(
                     ['external_id' => $priceData->sellerData->externalId],
@@ -67,11 +68,11 @@ class ParseProductPriceJob implements ShouldQueue
                         'inn' => $priceData->sellerData->inn,
                     ]
                 );
-                $sellerId = $seller->id;
-                Log::info("Found/Created Seller ID: {$sellerId} ({$seller->name})");
+                Log::info("Found/Created Seller ID: {$seller->id} ({$seller->name})");
                 
-                // Auto-assign seller to product link if not already set
-                if ($this->productLink->seller_id === null) {
+                // Use link seller if set, otherwise use DOM seller and assign to link
+                if ($sellerId === null) {
+                    $sellerId = $seller->id;
                     $this->productLink->update(['seller_id' => $sellerId]);
                     Log::info("Assigned seller '{$seller->name}' to ProductLink {$this->productLink->id}");
                 }

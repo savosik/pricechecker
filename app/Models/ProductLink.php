@@ -19,10 +19,13 @@ class ProductLink extends Model
         'seller_id',
         'url',
         'settings',
+        'last_parsed_at',
+        'last_parse_error',
     ];
 
     protected $casts = [
         'settings' => 'array',
+        'last_parsed_at' => 'datetime',
     ];
 
     /**

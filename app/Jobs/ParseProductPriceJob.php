@@ -45,6 +45,7 @@ class ParseProductPriceJob implements ShouldQueue
             if (str_contains($marketplaceCode, 'ozon')) {
                 $this->createDomTask($url, 'ozon');
                 Log::info("Created DomTask for Ozon Link ID: {$this->productLink->id}");
+                $this->productLink->update(['last_parsed_at' => now(), 'last_parse_error' => null]);
                 return;
             }
 
@@ -53,7 +54,9 @@ class ParseProductPriceJob implements ShouldQueue
             $priceData = $parser->getPrice($url);
 
             if ($priceData === null) {
+                $error = "Не удалось получить цену с {$marketplace->name}";
                 Log::warning("Failed to parse price for product {$product->id} on marketplace {$marketplace->name}");
+                $this->productLink->update(['last_parsed_at' => now(), 'last_parse_error' => $error]);
                 return;
             }
 
@@ -88,6 +91,7 @@ class ParseProductPriceJob implements ShouldQueue
                 (float)$lastHistory->base_price === (float)$priceData->basePrice
             ) {
                  $lastHistory->update(['checked_at' => now()]);
+                 $this->productLink->update(['last_parsed_at' => now(), 'last_parse_error' => null]);
                  Log::info("ParseProductPriceJob: Price duplicate for Link ID: {$this->productLink->id}. Updated checked_at and skipping save/notify.");
                  return;
             }
@@ -108,6 +112,8 @@ class ParseProductPriceJob implements ShouldQueue
                 Log::info("Skipping save for Link ID: {$this->productLink->id} due to conditions");
             }
 
+            $this->productLink->update(['last_parsed_at' => now(), 'last_parse_error' => null]);
+
             // Check if we should notify admins
             Log::info("Checking notify conditions for product {$product->id} on marketplace {$marketplace->name}");
             if ($this->shouldNotifyAdmins($priceData)) {
@@ -126,6 +132,7 @@ class ParseProductPriceJob implements ShouldQueue
         } catch (\Throwable $e) {
             Log::error("Error in ParseProductPriceJob for Link ID {$this->productLink->id}: " . $e->getMessage());
             Log::error($e->getTraceAsString());
+            $this->productLink->update(['last_parsed_at' => now(), 'last_parse_error' => $e->getMessage()]);
         }
     }
 

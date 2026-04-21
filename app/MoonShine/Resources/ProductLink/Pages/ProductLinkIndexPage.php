@@ -10,6 +10,7 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Url;
+use MoonShine\UI\Fields\Date;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use App\MoonShine\Resources\Product\ProductResource;
 use App\MoonShine\Resources\Marketplace\MarketplaceResource;
@@ -34,6 +35,11 @@ class ProductLinkIndexPage extends IndexPage
             Url::make('URL', 'url')->required(),
             Text::make('История', 'price_histories_count', fn($item) => $item->priceHistories()->count())
                 ->badge('purple'),
+            Date::make('Проверен', 'last_parsed_at')
+                ->format('d.m.Y H:i')
+                ->sortable(),
+            Text::make('Статус', 'last_parse_error', fn($item) => $item->last_parse_error ?? 'OK')
+                ->badge(fn($item) => $item->last_parse_error ? 'red' : ($item->last_parsed_at ? 'green' : 'gray')),
         ];
     }
 

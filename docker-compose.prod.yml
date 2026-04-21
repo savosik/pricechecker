@@ -93,29 +93,11 @@ services:
     depends_on:
       - mysql
 
-  browser:
-    image: accetto/ubuntu-vnc-xfce-g3
-    container_name: mp_parse2_browser
-    restart: unless-stopped
-    shm_size: '2gb'
-    environment:
-      - VNC_PW=secret
-      - VNC_RESOLUTION=1920x1080
-    ports:
-      - "5901:5901"   # VNC
-      - "6901:6901"   # noVNC web interface
-    volumes:
-      - ./chrome_extension:/headless/extension:ro
-      - ./docker/browser:/headless/scripts
-    user: "0:0"
-    networks:
-      - mp_parse2_network
-    depends_on:
-      - nginx
 
   certbot:
     image: certbot/certbot
     container_name: mp_parse2_certbot
+    restart: unless-stopped
     volumes:
       - ./docker/certbot/conf:/etc/letsencrypt
       - ./docker/certbot/www:/var/www/certbot

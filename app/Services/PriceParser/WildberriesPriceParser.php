@@ -36,9 +36,11 @@ class WildberriesPriceParser implements PriceParserInterface
             }
 
             // Fetch price data from API
+            // CURLOPT_HTTP_VERSION_2_0 is required: WB's wbaas antibot blocks Guzzle's default HTTP/1.1 config
             $response = Http::timeout(60)
                 ->withOptions([
                     'connect_timeout' => 20,
+                    'curl' => [CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2_0],
                 ])
                 ->withHeaders([
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',

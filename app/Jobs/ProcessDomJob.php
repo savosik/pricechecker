@@ -15,6 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\SendRrpViolationJob;
 
 class ProcessDomJob implements ShouldQueue
 {
@@ -84,6 +85,12 @@ class ProcessDomJob implements ShouldQueue
                 }
             }
             
+            // Check RRP violation and notify seller
+            if ($this->shouldSendRrpAlert($priceData, $productLink)) {
+                Log::info("ProcessDomJob: RRP violation for ProductLink {$productLink->id}. Dispatching SendRrpViolationJob.");
+                SendRrpViolationJob::dispatch($productLink, $priceData->userPrice);
+            }
+
             // Finding duplicate price
             $lastHistory = PriceHistory::where('product_link_id', $productLink->id)
                 ->latest()
@@ -137,6 +144,25 @@ class ProcessDomJob implements ShouldQueue
         }
     }
     
+    private function shouldSendRrpAlert(PriceData $priceData, ProductLink $productLink): bool
+    {
+        $product = $productLink->product;
+        if (! $product->recommended_price) {
+            return false;
+        }
+        if ($priceData->userPrice >= $product->recommended_price) {
+            return false;
+        }
+        if (! $productLink->seller?->email) {
+            return false;
+        }
+        $notifiedAt = $productLink->rrp_notified_at;
+        if ($notifiedAt && $notifiedAt->diffInDays(now()) < 7) {
+            return false;
+        }
+        return true;
+    }
+
     private function shouldSavePrice(PriceData $priceData): bool
     {
         $productLink = $this->domTask->productLink;

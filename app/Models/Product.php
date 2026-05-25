@@ -22,12 +22,14 @@ class Product extends Model
         'tracking_urls',
         'condition',
         'notify_condition',
+        'recommended_price',
     ];
 
     protected $casts = [
         'tracking_urls' => 'array',
         'condition' => 'collection',
         'notify_condition' => 'collection',
+        'recommended_price' => 'float',
     ];
 
     public function brand(): BelongsTo

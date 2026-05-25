@@ -21,11 +21,13 @@ class ProductLink extends Model
         'settings',
         'last_parsed_at',
         'last_parse_error',
+        'rrp_notified_at',
     ];
 
     protected $casts = [
         'settings' => 'array',
         'last_parsed_at' => 'datetime',
+        'rrp_notified_at' => 'datetime',
     ];
 
     /**

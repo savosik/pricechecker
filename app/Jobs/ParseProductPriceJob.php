@@ -11,6 +11,7 @@ use App\Models\ProductLink;
 use App\Models\Seller;
 use App\Services\PriceParser\PriceParserFactory;
 use Illuminate\Bus\Queueable;
+use App\Jobs\SendRrpViolationJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -79,6 +80,12 @@ class ParseProductPriceJob implements ShouldQueue
                     $this->productLink->update(['seller_id' => $sellerId]);
                     Log::info("Assigned seller '{$seller->name}' to ProductLink {$this->productLink->id}");
                 }
+            }
+
+            // Check RRP violation and notify seller
+            if ($this->shouldSendRrpAlert($priceData->userPrice)) {
+                Log::info("ParseProductPriceJob: RRP violation for Link ID: {$this->productLink->id}. Dispatching SendRrpViolationJob.");
+                SendRrpViolationJob::dispatch($this->productLink, $priceData->userPrice);
             }
 
             // Check for duplicate price
@@ -157,6 +164,25 @@ class ParseProductPriceJob implements ShouldQueue
             'marketplace_code' => $marketplaceCode,
             'status' => 'pending',
         ]);
+    }
+
+    private function shouldSendRrpAlert(float $userPrice): bool
+    {
+        $product = $this->productLink->product;
+        if (! $product->recommended_price) {
+            return false;
+        }
+        if ($userPrice >= $product->recommended_price) {
+            return false;
+        }
+        if (! $this->productLink->seller?->email) {
+            return false;
+        }
+        $notifiedAt = $this->productLink->rrp_notified_at;
+        if ($notifiedAt && $notifiedAt->diffInDays(now()) < 7) {
+            return false;
+        }
+        return true;
     }
 
     private function shouldSavePrice(\App\Services\PriceParser\PriceData $priceData): bool

@@ -53,6 +53,10 @@ final class ProductFormPage extends FormPage
                             ->required(),
                         Url::make('URL изображения', 'image_url')
                             ->nullable(),
+                        Number::make('РРЦ', 'recommended_price')
+                            ->nullable()
+                            ->step(0.01)
+                            ->min(0),
 
                     ]),
                     HasMany::make('Ссылки', 'links', resource: ProductLinkResource::class)
@@ -163,6 +167,7 @@ final class ProductFormPage extends FormPage
             'name' => 'required|string|max:255',
             'sku' => 'required|string|max:255',
             'image_url' => 'nullable|url|max:255',
+            'recommended_price' => 'nullable|numeric|min:0',
             'brand_id' => 'nullable|exists:brands,id',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',

@@ -15,6 +15,7 @@ class Seller extends Model
         'inn',
         'external_id',
         'marketplace_id',
+        'email',
     ];
 
     public function marketplace(): BelongsTo

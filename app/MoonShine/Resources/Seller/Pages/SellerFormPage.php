@@ -12,6 +12,7 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Email;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 
 /**
@@ -32,6 +33,7 @@ final class SellerFormPage extends FormPage
                     ->required(),
                 Text::make('ИНН', 'inn'),
                 Text::make('Внешний ID', 'external_id'),
+                Email::make('Email', 'email')->nullable(),
                 BelongsTo::make('Маркетплейс', 'marketplace', resource: MarketplaceResource::class)
                     ->nullable()
                     ->searchable(),
@@ -67,6 +69,7 @@ final class SellerFormPage extends FormPage
             'inn' => 'nullable|string|max:255',
             'external_id' => 'nullable|string|max:255',
             'marketplace_id' => 'nullable|exists:marketplaces,id',
+            'email' => 'nullable|email|max:255',
         ];
     }
 }

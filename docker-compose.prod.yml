@@ -77,23 +77,6 @@ services:
     networks:
       - mp_parse2_network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: mp_parse2_phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_USER: ${DB_USERNAME:-laravel}
-      PMA_PASSWORD: ${DB_PASSWORD:-root}
-    ports:
-      - "8081:80"
-    networks:
-      - mp_parse2_network
-    depends_on:
-      - mysql
-
-
   certbot:
     image: certbot/certbot
     container_name: mp_parse2_certbot

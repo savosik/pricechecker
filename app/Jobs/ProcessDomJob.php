@@ -156,6 +156,9 @@ class ProcessDomJob implements ShouldQueue
         if (! $productLink->seller?->email) {
             return false;
         }
+        if (! $productLink->seller->notify_rrp) {
+            return false;
+        }
         $notifiedAt = $productLink->rrp_notified_at;
         if ($notifiedAt && $notifiedAt->diffInDays(now()) < 7) {
             return false;

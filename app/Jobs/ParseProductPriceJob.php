@@ -178,6 +178,9 @@ class ParseProductPriceJob implements ShouldQueue
         if (! $this->productLink->seller?->email) {
             return false;
         }
+        if (! $this->productLink->seller->notify_rrp) {
+            return false;
+        }
         $notifiedAt = $this->productLink->rrp_notified_at;
         if ($notifiedAt && $notifiedAt->diffInDays(now()) < 7) {
             return false;

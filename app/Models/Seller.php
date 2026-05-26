@@ -16,6 +16,11 @@ class Seller extends Model
         'external_id',
         'marketplace_id',
         'email',
+        'notify_rrp',
+    ];
+
+    protected $casts = [
+        'notify_rrp' => 'boolean',
     ];
 
     public function marketplace(): BelongsTo
